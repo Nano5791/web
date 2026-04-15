@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ManoSys | Tu tecnología en buenas manos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --neon: #00ffe7;
+      --bg: #060b14;
+      --bg2: #0d1626;
+      --bg3: #101c30;
+      --text: #c8d8e8;
+      --text-light: #e8f4f8;
+      --card-bg: #0d1a2d;
+      --border: rgba(0,255,231,0.15);
+      --font-display: 'Inter', sans-serif;
+      --font-mono: 'Share Tech Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--bg); color: var(--text); font-family: var(--font-display); overflow-x: hidden; }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.4;
+    }
+
+    /* ─── NAVBAR ─── */
+    .navbar { background: rgba(6,11,20,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0.8rem 0; position: sticky; top: 0; z-index: 1000; }
+    .navbar-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .navbar-brand img { height: 60px; width: auto; }
+    .navbar-brand-text { font-family: var(--font-mono); color: var(--text-light); font-size: 1.15rem; letter-spacing: 0.05em; line-height: 1.1; }
+    .navbar-brand-text small { display: block; color: var(--text-light); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; }
+    .nav-link { color: var(--text) !important; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.4rem 1rem !important; transition: color 0.2s; }
+    .nav-link:hover { color: var(--neon) !important; }
+    .navbar-toggler { border-color: var(--border); }
+    .navbar-toggler-icon { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0,255,231,0.8)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); }
+
+    /* ─── HERO ─── */
+    #inicio { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden;
+      background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(0,255,231,0.05) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 50% at 20% 80%, rgba(123,94,167,0.08) 0%, transparent 60%),
+                  var(--bg); }
+    #inicio::after { content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(0,255,231,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,231,0.03) 1px, transparent 1px);
+      background-size: 60px 60px; pointer-events: none; }
+
+    .hero-eyebrow { font-family: var(--font-mono); color: var(--neon); font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.2rem; opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards; }
+    .hero-name { font-family: var(--font-display); font-size: clamp(2.4rem, 6vw, 4.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.02; color: var(--text-light); opacity: 0; animation: fadeUp 0.7s ease 0.4s forwards; }
+    .hero-name .highlight { color: var(--neon); text-shadow: 0 0 30px rgba(0,255,231,0.4); }
+    .hero-tagline { font-family: var(--font-display); font-size: clamp(0.95rem, 2vw, 1.1rem); color: var(--text); margin-top: 1.2rem; opacity: 0; animation: fadeUp 0.7s ease 0.6s forwards; }
+    .hero-desc { font-size: 1rem; color: var(--text); line-height: 1.7; max-width: 520px; margin-top: 1.5rem; opacity: 0; animation: fadeUp 0.7s ease 0.8s forwards; }
+    .hero-ctas { margin-top: 2.5rem; display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s ease 1s forwards; }
+    .btn-neon { background: transparent; border: 1.5px solid var(--neon); color: var(--neon); font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.1em; padding: 0.7rem 1.8rem; text-transform: uppercase; transition: background 0.25s, box-shadow 0.25s; text-decoration: none; display: inline-block; }
+    .btn-neon:hover { background: rgba(0,255,231,0.1); box-shadow: 0 0 20px rgba(0,255,231,0.25); color: var(--neon); }
+    .btn-solid { background: var(--neon); border: 1.5px solid var(--neon); color: var(--bg); font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.1em; padding: 0.7rem 1.8rem; text-transform: uppercase; font-weight: 700; transition: box-shadow 0.25s, opacity 0.25s; text-decoration: none; display: inline-block; }
+    .btn-solid:hover { box-shadow: 0 0 25px rgba(0,255,231,0.4); color: var(--bg); opacity: 0.9; }
+
+    /* Logo hero */
+    .hero-logo-wrap { display: flex; justify-content: center; align-items: center; padding: 2rem; opacity: 0; animation: fadeUp 0.7s ease 0.5s forwards; }
+    .hero-logo-wrap img { max-width: 460px; width: 100%; filter: drop-shadow(0 0 30px rgba(0,255,231,0.2)); }
+
+    /* Tech badges */
+    .tech-stack { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.85rem; margin-top: 1.25rem; }
+    .stack-item { display: inline-flex; align-items: center; gap: 0.75rem; font-family: var(--font-display); font-size: 0.95rem; color: var(--text-light); background: rgba(0,255,231,0.05); border: 1px solid rgba(0,255,231,0.12); border-radius: 999px; padding: 0.85rem 1rem; min-width: 170px; justify-content: center; }
+    .stack-icon { width: 1.6rem; height: 1.6rem; display: inline-flex; align-items: center; justify-content: center; color: var(--neon); }
+    .stack-icon svg,
+    .stack-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .stack-item.stack-react .stack-icon,
+    .stack-item.stack-aws .stack-icon { border: 1px solid rgba(255,255,255,0.85); border-radius: 999px; padding: 0.2rem; }
+    .stack-item.stack-react .stack-icon img,
+    .stack-item.stack-aws .stack-icon img { filter: brightness(0) invert(1); }
+
+    /* ─── SECTION ─── */
+    section { position: relative; z-index: 1; }
+    .section-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--neon); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: var(--text-light); line-height: 1.1; }
+    .section-divider { width: 48px; height: 3px; background: var(--neon); margin: 1.2rem 0 2.5rem; box-shadow: 0 0 10px rgba(0,255,231,0.5); }
+
+    /* ─── SOBRE NOSOTROS ─── */
+    #sobre-mi { background: var(--bg2); padding: 100px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .sobre-text { font-size: 1rem; line-height: 1.8; color: var(--text); }
+    .feature-list { display: grid; gap: 0.9rem; margin-top: 1rem; }
+    .feature-item { font-family: var(--font-display); color: var(--text-light); background: rgba(0,255,231,0.05); border: 1px solid rgba(0,255,231,0.12); border-radius: 16px; padding: 1rem 1.1rem; }
+    .feature-item strong { color: var(--neon); display: block; margin-bottom: 0.35rem; font-size: 0.95rem; }
+    .feature-item::before { content: '•'; color: var(--neon); margin-right: 0.65rem; }
+    .feature-item { display: flex; gap: 0.5rem; align-items: baseline; }
+    .feature-item span { display: block; }
+    .stat-box { background: var(--card-bg); border: 1px solid var(--border); padding: 1.5rem; text-align: center; transition: border-color 0.3s, box-shadow 0.3s; }
+    .stat-box:hover { border-color: var(--neon); box-shadow: 0 0 20px rgba(0,255,231,0.1); }
+    .stat-num { font-family: var(--font-mono); font-size: 2.2rem; color: var(--neon); font-weight: 700; }
+    .stat-label { font-size: 0.8rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.3rem; }
+
+    /* ─── SERVICIOS ─── */
+    #servicios { padding: 100px 0; background: var(--bg); }
+    .service-card { background: var(--card-bg); border: 1px solid var(--border); padding: 2rem; height: 100%; position: relative; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; overflow: hidden; }
+    .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--neon), transparent); opacity: 0; transition: opacity 0.3s; }
+    .service-card:hover { transform: translateY(-4px); border-color: rgba(0,255,231,0.3); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+    .service-card:hover::before { opacity: 1; }
+    .service-icon { font-size: 2rem; color: var(--neon); margin-bottom: 1.2rem; }
+    .service-title { font-size: 1.1rem; font-weight: 700; color: var(--text-light); margin-bottom: 0.8rem; }
+    .service-desc { font-size: 0.9rem; color: var(--text); line-height: 1.7; }
+    .service-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.7rem; color: var(--neon); background: rgba(0,255,231,0.06); border: 1px solid rgba(0,255,231,0.2); padding: 0.15rem 0.5rem; margin: 0.2rem 0.1rem 0; }
+
+    .highlight-section { padding: 100px 0; background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .highlight-card { background: var(--card-bg); border: 1px solid var(--border); padding: 1.75rem; border-radius: 24px; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; height: 100%; overflow: hidden; }
+    .highlight-card:hover { transform: translateY(-4px); border-color: rgba(0,255,231,0.3); box-shadow: 0 18px 40px rgba(0,0,0,0.25); }
+    .highlight-img { width: 100%; border-radius: 20px; margin-bottom: 1.3rem; }
+    .carousel .highlight-img { width: auto; max-width: 90%; max-height: 220px; height: auto; object-fit: contain; border-radius: 20px; margin: 0 auto; display: block; }
+    .carousel-inner { min-height: 260px; display: grid; place-items: center; background: var(--bg3); border-radius: 20px; padding: 1rem 0; }
+    .carousel-item { display: grid; place-items: center; }
+    .carousel-indicators { margin-bottom: 0.85rem; }
+    .carousel-indicators button { background-color: rgba(0,255,231,0.3); border: 1px solid var(--neon); }
+    .carousel-indicators .active { background-color: var(--neon); }
+    .carousel-control-prev-icon, .carousel-control-next-icon { background-color: var(--neon); border-radius: 50%; padding: 0.5rem; }
+    .highlight-title { font-size: 1.2rem; font-weight: 700; color: var(--text-light); margin-bottom: 0.9rem; }
+    .highlight-text { color: var(--text); line-height: 1.7; font-size: 0.95rem; }
+
+    /* ─── PORTFOLIO ─── */
+    #portfolio { padding: 100px 0; background: var(--bg2); border-top: 1px solid var(--border); }
+    .filter-btn { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; background: transparent; border: 1px solid var(--border); color: var(--text); padding: 0.4rem 1rem; margin: 0.2rem; cursor: pointer; transition: all 0.2s; }
+    .filter-btn:hover, .filter-btn.active { border-color: var(--neon); color: var(--neon); background: rgba(0,255,231,0.06); }
+    .portfolio-card { background: var(--card-bg); border: 1px solid var(--border); overflow: hidden; transition: transform 0.3s, border-color 0.3s; }
+    .portfolio-card:hover { transform: translateY(-4px); border-color: rgba(0,255,231,0.3); }
+    .portfolio-img { height: 180px; background: var(--bg3); display: flex; align-items: center; justify-content: center; position: relative; }
+    .portfolio-img i { font-size: 3.5rem; color: var(--neon); }
+    .portfolio-img .overlay { position: absolute; inset: 0; background: rgba(0,255,231,0.08); opacity: 0; transition: opacity 0.3s; display: flex; align-items: center; justify-content: center; }
+    .portfolio-card:hover .overlay { opacity: 1; }
+    .portfolio-body { padding: 1.2rem; }
+    .portfolio-cat { font-family: var(--font-mono); font-size: 0.7rem; color: var(--neon); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.4rem; }
+    .portfolio-name { font-size: 1rem; font-weight: 700; color: var(--text-light); }
+    .portfolio-desc { font-size: 0.85rem; color: var(--text); line-height: 1.6; margin-top: 0.5rem; }
+
+    /* ─── PROCESO ─── */
+    #proceso { padding: 100px 0; background: var(--bg); border-top: 1px solid var(--border); }
+    .step-num { font-family: var(--font-mono); font-size: 3rem; color: rgba(0,255,231,0.12); font-weight: 700; line-height: 1; margin-bottom: 0.5rem; }
+    .step-title { font-size: 1rem; font-weight: 700; color: var(--text-light); margin-bottom: 0.5rem; }
+    .step-desc { font-size: 0.88rem; color: var(--text); line-height: 1.6; }
+    .step-card { padding: 1.5rem; border-left: 2px solid var(--border); transition: border-color 0.3s; }
+    .step-card:hover { border-color: var(--neon); }
+
+    /* ─── CONTACTO ─── */
+    #contacto { padding: 100px 0; background: var(--bg2); border-top: 1px solid var(--border); }
+    .contact-item { display: flex; align-items: center; gap: 1rem; padding: 1.2rem; background: var(--card-bg); border: 1px solid var(--border); margin-bottom: 1rem; text-decoration: none; transition: border-color 0.25s, background 0.25s; }
+    .contact-item:hover { border-color: var(--neon); background: rgba(0,255,231,0.04); }
+    .contact-item i { font-size: 1.4rem; color: var(--neon); min-width: 30px; }
+    .contact-item-label { font-size: 0.75rem; font-family: var(--font-mono); color: var(--text); text-transform: uppercase; letter-spacing: 0.1em; }
+    .contact-item-value { font-size: 0.95rem; color: var(--text-light); font-weight: 600; }
+    .contact-form-wrap { background: var(--card-bg); border: 1px solid var(--border); padding: 2.5rem; }
+    .form-label { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); margin-bottom: 0.4rem; }
+    .form-control { background: var(--bg); border: 1px solid var(--border); color: var(--text-light); border-radius: 0; font-family: var(--font-mono); font-size: 0.9rem; padding: 0.7rem 1rem; }
+    .form-control:focus { background: var(--bg); border-color: var(--neon); color: var(--text-light); box-shadow: 0 0 0 2px rgba(0,255,231,0.1); }
+    .form-control::placeholder { color: rgba(200,216,232,0.3); }
+
+    /* ─── FOOTER ─── */
+    footer { background: var(--bg); border-top: 1px solid var(--border); padding: 3.5rem 0 2rem; }
+    .footer-top { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--border); }
+    .footer-column h3 { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--neon); margin-bottom: 1.2rem; }
+    .footer-logo-section { text-align: left; }
+    .footer-logo-section img { height: 80px; margin-bottom: 1rem; filter: drop-shadow(0 0 10px rgba(0,255,231,0.2)); }
+    .footer-logo-text { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text); margin-bottom: 0.8rem; }
+    .footer-tagline { font-family: var(--font-display); font-size: 0.95rem; color: var(--neon); font-weight: 600; }
+    .footer-links { display: flex; flex-direction: column; gap: 0.8rem; text-align: left; }
+    .footer-links a { font-family: var(--font-display); font-size: 0.95rem; color: var(--text); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--neon); }
+    .footer-contact { display: flex; flex-direction: column; gap: 0.8rem; text-align: left; }
+    .footer-contact-item { display: flex; align-items: center; gap: 0.7rem; font-size: 0.9rem; color: var(--text); }
+    .footer-contact-item i { font-size: 1.1rem; color: var(--neon); min-width: 20px; }
+    .footer-contact-item a { color: var(--text-light); text-decoration: none; transition: color 0.2s; }
+    .footer-contact-item a:hover { color: var(--neon); }
+    .footer-socials { display: flex; gap: 0.6rem; margin-top: 0.4rem; }
+    .footer-socials a { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(0,255,231,0.06); border: 1px solid rgba(0,255,231,0.12); border-radius: 50%; color: var(--neon); text-decoration: none; transition: background 0.2s; }
+    .footer-socials a:hover { background: rgba(0,255,231,0.12); }
+    .footer-bottom { text-align: center; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+    .footer-bottom-links { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text); margin-bottom: 0.6rem; }
+    .footer-bottom-links a { color: var(--text); text-decoration: none; transition: color 0.2s; }
+    .footer-bottom-links a:hover { color: var(--neon); }
+    .footer-stack { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.7rem; margin-top: 1.2rem; }
+    .footer-stack-item { display: inline-flex; align-items: center; gap: 0.45rem; font-family: var(--font-mono); font-size: 0.78rem; color: var(--text); background: rgba(0,255,231,0.06); border: 1px solid rgba(0,255,231,0.12); border-radius: 999px; padding: 0.55rem 0.9rem; }
+    .footer-stack-item i,
+    .footer-stack-icon { width: 1rem; height: 1rem; color: var(--neon); display: inline-flex; align-items: center; justify-content: center; }
+    .footer-stack-icon svg { width: 1rem; height: 1rem; display: block; }
+    .footer-stack-icon svg path,
+    .footer-stack-icon svg circle,
+    .footer-stack-icon svg ellipse { fill: currentColor; stroke: currentColor; }
+    .footer-copyright { font-family: var(--font-mono); font-size: 0.75rem; color: rgba(200,216,232,0.4); }
+    @media (max-width: 768px) { .footer-top { grid-template-columns: 1fr; gap: 2rem; } }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: none; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(0,255,231,0.3); border-radius: 3px; }
+    @media (max-width: 768px) { .hero-logo-wrap img { max-width: 320px; } .contact-form-wrap { padding: 1.5rem; } }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAVBAR ─── -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#inicio">
+        <img src="Logo.png" alt="ManoSys"/>
+        <div class="navbar-brand-text">
+          ManoSys
+          <small>Tu tecnología en buenas manos</small>
+        </div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+        <ul class="navbar-nav gap-1">
+          <li class="nav-item"><a class="nav-link" href="#sobre-mi">Quiénes somos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
+          <li class="nav-item"><a class="nav-link" href="#portfolio">Portfolio</a></li>
+          <li class="nav-item"><a class="nav-link" href="#proceso">Cómo trabajamos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section id="inicio">
+    <div class="container py-5">
+      <div class="row align-items-center gy-5">
+        <div class="col-lg-7">
+          <p class="hero-eyebrow">// Buenos Aires, Argentina · Soluciones IT</p>
+          <h1 class="hero-name">
+            ManoSys<br/>
+            Tu mundo digital, en buenas manos
+          </h1>
+          <p class="hero-tagline">&gt; Desarrollo · Soporte · Reparacion</p>
+          <p class="hero-desc">
+            Reparamos y optimizamos notebooks y computadoras, instalamos sistemas
+            y desarrollamos aplicaciones web y móviles a medida. Atención personalizada,
+            soluciones concretas para tu negocio o tu equipo.
+          </p>
+          <div class="hero-ctas">
+            <a href="#servicios" class="btn-solid">Ver servicios</a>
+            <a href="#contacto" class="btn-neon">Contactanos</a>
+          </div>
+        </div>
+        <div class="col-lg-5 text-center">
+          <div class="hero-logo-wrap">
+            <img src="Logo.png" alt="ManoSys Logo"/>
+          </div>
+          <div class="tech-stack mt-3">
+            <div class="stack-item">
+              <span class="stack-icon"><img src="Stack Tecnologico/windows.png" alt="Windows icon"/></span>
+              Windows
+            </div>
+            <div class="stack-item stack-react">
+              <span class="stack-icon"><img src="Stack Tecnologico/react.png" alt="React Native icon"/></span>
+              React Native
+            </div>
+            <div class="stack-item">
+              <span class="stack-icon"><img src="Stack Tecnologico/nodejs.png" alt="Node.js icon"/></span>
+              Node.js
+            </div>
+            <div class="stack-item">
+              <span class="stack-icon"><img src="Stack Tecnologico/postgreesql.png" alt="PostgreSQL icon"/></span>
+              PostgreSQL
+            </div>
+            <div class="stack-item stack-aws">
+              <span class="stack-icon"><img src="Stack Tecnologico/aws.png" alt="AWS icon"/></span>
+              AWS
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SOBRE NOSOTROS ─── -->
+  <section id="sobre-mi">
+    <div class="container">
+      <div class="row gy-5 align-items-center">
+        <div class="col-lg-6 fade-in">
+          <p class="section-label">// 01 — Quiénes somos</p>
+          <h2 class="section-title">Tecnología al servicio<br/><span style="color:var(--neon)">de tu negocio</span></h2>
+          <div class="section-divider"></div>
+          <p class="sobre-text mb-3">
+            En ManoSys nos dedicamos a resolver problemas tecnológicos reales con soluciones simples y concretas. Trabajamos tanto en el mundo del hardware — reparación, diagnóstico y optimización de equipos— como en el desarrollo de aplicaciones móviles y web, y en el diseño de sitios profesionales que potencian la presencia digital de emprendedores y empresas.
+          </p>
+          <p class="sobre-text mb-3">
+            Además, contamos con experiencia en gestión documental y digitalización de procesos, ayudando a organizaciones y compañías a migrar sus sistemas tradicionales hacia entornos digitales seguros, eficientes y trazables.
+          </p>
+          <p class="sobre-text mb-3">
+            Nos vinculamos de manera directa con cada cliente, sin intermediarios, para entender qué necesitan y entregarlo en tiempo y forma. Somos su equipo de tecnología de confianza, sin importar el tamaño de su empresa.
+          </p>
+          <p class="sobre-text">
+            Siempre actualizados con las últimas tecnologías para ofrecer lo mejor en cada proyecto.
+          </p>
+        </div>
+        <div class="col-lg-6 fade-in">
+          <div class="row g-3">
+            <div class="col-6"><div class="stat-box"><div class="stat-num">4+</div><div class="stat-label">Años de experiencia</div></div></div>
+            <div class="col-6"><div class="stat-box"><div class="stat-num">10+</div><div class="stat-label">Equipos optimizados</div></div></div>
+            <div class="col-6"><div class="stat-box"><div class="stat-num">3+</div><div class="stat-label">Apps en desarrollos</div></div></div>
+            <div class="col-6"><div class="stat-box"><div class="stat-num">100%</div><div class="stat-label">Compromiso con el Cliente</div></div></div>
+          </div>
+          <div class="feature-list mt-4">
+            <div class="feature-item"><strong>Experiencia:</strong> “Gestión de procesos y proyectos tecnológicos en Gobierno y empresas”</div>
+            <div class="feature-item"><strong>Servicios:</strong> “Desarrollo de apps, optimización de sistemas y soporte integral.”</div>
+            <div class="feature-item"><strong>Visión:</strong> “Innovación modular y soluciones digitales confiables para tu crecimiento.”</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SERVICIOS ─── -->
+  <section id="servicios">
+    <div class="container">
+      <div class="text-center mb-5 fade-in">
+        <p class="section-label">// 02 — Qué hacemos</p>
+        <h2 class="section-title">Nuestros servicios</h2>
+        <div class="section-divider mx-auto"></div>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="service-card">
+            <div class="service-icon"><i class="bi bi-tools"></i></div>
+            <div class="service-title">Reparación de notebooks y PCs</div>
+            <p class="service-desc">Diagnóstico y reparación de fallas de hardware y software. Cambio de pantallas, teclados, discos, memorias y coolers. Mantenimiento preventivo y optimización de equipos para prolongar su vida útil.</p>
+            <div class="mt-3"><span class="service-tag">Hardware</span><span class="service-tag">Diagnóstico</span></div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="service-card">
+            <div class="service-icon"><i class="bi bi-pc-display"></i></div>
+            <div class="service-title">Instalación y optimización de sistemas</div>
+            <p class="service-desc">Instalación de Windows y drivers,Optimización de rendimiento, limpieza de virus y configuración de periféricos. “Tu PC funcionando como nueva, con soporte técnico confiable y rápido.”</p>
+            <div class="mt-3"><span class="service-tag">Windows</span></div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="service-card">
+            <div class="service-icon"><i class="bi bi-window-stack"></i></div>
+            <div class="service-title">Desarrollo de aplicaciones web</div>
+            <p class="service-desc">Sitios y aplicaciones web a medida para negocios, emprendimientos y startups. Diseño responsivo, moderno y fácil de administrar.</p>
+            <div class="mt-3"><span class="service-tag">React</span><span class="service-tag">Node.js</span><span class="service-tag">PostgreSQL </span></div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="service-card">
+            <div class="service-icon"><i class="bi bi-phone"></i></div>
+            <div class="service-title">Desarrollo de aplicaciones móviles</div>
+            <p class="service-desc">Creamos apps para Android e iOS con tecnologías híbridas modernas como React Native, asegurando rendimiento y compatibilidad. Acompañamos todo el proceso: desde el diseño y la experiencia de usuario hasta la publicación en las tiendas oficiales.</p>
+            <div class="mt-3"><span class="service-tag">Android</span><span class="service-tag">iOS</span><span class="service-tag">React Native</span></div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="service-card">
+            <div class="service-icon"><i class="bi bi-headset"></i></div>
+            <div class="service-title">Soporte técnico remoto</div>
+            <p class="service-desc">Resolución de problemas de forma remota sin que tengas que moverte de tu casa u oficina. Rápido, efectivo y sin complicaciones.</p>
+            <div class="mt-3"><span class="service-tag">Remoto</span><span class="service-tag">Multiplataforma </span><span class="service-tag">Seguridad</span></div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 fade-in">
+          <div class="service-card">
+            <div class="service-icon"><i class="bi bi-file-earmark-text"></i></div>
+            <div class="service-title">Gestión documental y digitalización</div>
+            <p class="service-desc">Optimización de procesos administrativos mediante digitalización segura de documentos, organización de archivos y automatización de flujos de trabajo. Ideal para empresas que buscan eficiencia y trazabilidad.</p>
+            <div class="mt-3"><span class="service-tag">Digitalización</span><span class="service-tag">Seguridad</span><span class="service-tag">Automatización</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PORTFOLIO ─── -->
+  <section id="portfolio">
+    <div class="container">
+      <div class="text-center mb-4 fade-in">
+        <p class="section-label">// 04 — Proyectos</p>
+        <h2 class="section-title">Portfolio</h2>
+        <div class="section-divider mx-auto"></div>
+      </div>
+      <div class="text-center mb-4 fade-in">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="web">Apps web</button>
+        <button class="filter-btn" data-filter="mobile">Apps móviles</button>
+        <button class="filter-btn" data-filter="tech">Tecnico</button>
+      </div>
+      <div class="row g-4" id="portfolio-grid">
+        <div class="col-sm-6 col-lg-4 fade-in portfolio-item" data-cat="web">
+          <div class="portfolio-card">
+            <div class="portfolio-img"><i class="bi bi-globe"></i><div class="overlay"><i class="bi bi-arrow-up-right-circle text-white fs-3"></i></div></div>
+            <div class="portfolio-body"><div class="portfolio-cat">App Web</div><div class="portfolio-name">Portal institucional / landing page profesional</div><div class="portfolio-desc">Sitio web moderno y adaptable para emprendimientos, startups o profesionales independientes. Incluye presentación clara de servicios, contacto directo y optimización SEO para visibilidad en buscadores.</div></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 fade-in portfolio-item" data-cat="web">
+          <div class="portfolio-card">
+            <div class="portfolio-img"><i class="bi bi-cart3"></i><div class="overlay"><i class="bi bi-arrow-up-right-circle text-white fs-3"></i></div></div>
+            <div class="portfolio-body"><div class="portfolio-cat">App Web</div><div class="portfolio-name">E-commerce para negocio local</div><div class="portfolio-desc">Tienda online pensada para pequeños comercios, con diseño responsivo y gestión simple.</div></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 fade-in portfolio-item" data-cat="mobile">
+          <div class="portfolio-card">
+            <div class="portfolio-img"><i class="bi bi-phone-fill"></i><div class="overlay"><i class="bi bi-arrow-up-right-circle text-white fs-3"></i></div></div>
+            <div class="portfolio-body"><div class="portfolio-cat">App Móvil</div><div class="portfolio-name">Gestión de servicios bajo demanda</div><div class="portfolio-desc">Plataforma móvil que conecta hogares con profesionales verificados para tareas domésticas y reparaciones. Incluye pagos integrados, soporte local 24/7 y geolocalización avanzada para encontrar ayuda cercana de forma rápida y segura.</div></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 fade-in portfolio-item" data-cat="mobile">
+          <div class="portfolio-card">
+            <div class="portfolio-img"><i class="bi bi-ticket"></i><div class="overlay"><i class="bi bi-arrow-up-right-circle text-white fs-3"></i></div></div>
+            <div class="portfolio-body"><div class="portfolio-cat">App Móvil</div><div class="portfolio-name">Eventos comunitarios</div><div class="portfolio-desc">Aplicación para crear y descubrir encuentros de comunidades específicas. Permite sumar nuevos puntos de reunión en la ciudad, comprar entradas o tickets directamente desde la app y usar geolocalización para ubicar los eventos más próximos.</div></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 fade-in portfolio-item" data-cat="tech">
+          <div class="portfolio-card">
+            <div class="portfolio-img"><i class="bi bi-motherboard"></i><div class="overlay"><i class="bi bi-arrow-up-right-circle text-white fs-3"></i></div></div>
+            <div class="portfolio-body"><div class="portfolio-cat">Técnico</div><div class="portfolio-name">Actualización y mejora de PCs</div><div class="portfolio-desc">Instalación de nuevos componentes, ampliación de memoria y discos, y optimización del rendimiento para uso profesional o personal.</div></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 fade-in portfolio-item" data-cat="web">
+          <div class="portfolio-card">
+            <div class="portfolio-img"><i class="bi bi-calendar-event"></i><div class="overlay"><i class="bi bi-arrow-up-right-circle text-white fs-3"></i></div></div>
+            <div class="portfolio-body"><div class="portfolio-cat">App Web</div><div class="portfolio-name">Sistema de gestión de reservas</div><div class="portfolio-desc">Herramienta para profesionales y negocios que necesitan organizar turnos y reservas online.</div></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 fade-in portfolio-item" data-cat="tech">
+          <div class="portfolio-card">
+            <div class="portfolio-img"><i class="bi bi-laptop"></i><div class="overlay"><i class="bi bi-arrow-up-right-circle text-white fs-3"></i></div></div>
+            <div class="portfolio-body"><div class="portfolio-cat">Técnico</div><div class="portfolio-name">Reparación de notebooks y PCs</div><div class="portfolio-desc">Diagnóstico y reparación de fallas de hardware y software. Cambio de pantallas, teclados, discos, memorias y coolers, más mantenimiento preventivo para prolongar la vida útil del equipo.</div></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 fade-in portfolio-item" data-cat="tech">
+          <div class="portfolio-card">
+            <div class="portfolio-img"><i class="bi bi-pc-display"></i><div class="overlay"><i class="bi bi-arrow-up-right-circle text-white fs-3"></i></div></div>
+            <div class="portfolio-body"><div class="portfolio-cat">Técnico</div><div class="portfolio-name">Instalación y optimización de sistemas</div><div class="portfolio-desc">Instalación de Windows y drivers, configuración de periféricos y limpieza de virus. Optimización de rendimiento para que el equipo funcione como nuevo.</div></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 fade-in portfolio-item" data-cat="tech">
+          <div class="portfolio-card">
+            <div class="portfolio-img"><i class="bi bi-file-earmark-text"></i><div class="overlay"><i class="bi bi-arrow-up-right-circle text-white fs-3"></i></div></div>
+            <div class="portfolio-body"><div class="portfolio-cat">Técnico / Digitalización</div><div class="portfolio-name">Digitalización y organización documental</div><div class="portfolio-desc">Experiencia en procesos de digitalización y optimización de la gestión documental. Enfoque en la conversión segura de documentos a formatos digitales, organización clara y accesible, y acompañamiento en la transición hacia entornos más eficientes.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PROCESO ─── -->
+  <section id="proceso">
+    <div class="container">
+      <div class="text-center mb-5 fade-in">
+        <p class="section-label">// 05 — Cómo trabajamos</p>
+        <h2 class="section-title">Nuestro proceso</h2>
+        <div class="section-divider mx-auto"></div>
+      </div>
+      <div class="row g-4">
+        <div class="col-sm-6 col-lg-3 fade-in"><div class="step-card"><div class="step-num">01</div><div class="step-title">Consulta inicial</div><p class="step-desc">Nos contás qué necesitás. Te escuchamos, hacemos preguntas y entendemos bien el problema o el proyecto.</p></div></div>
+        <div class="col-sm-6 col-lg-3 fade-in"><div class="step-card"><div class="step-num">02</div><div class="step-title">Diagnóstico y propuesta</div><p class="step-desc">Evaluamos la situación y te presentamos una solución clara con presupuesto sin sorpresas.</p></div></div>
+        <div class="col-sm-6 col-lg-3 fade-in"><div class="step-card"><div class="step-num">03</div><div class="step-title">Ejecución</div><p class="step-desc">Nos ponemos a trabajar. Te mantenemos informado del avance en todo momento.</p></div></div>
+        <div class="col-sm-6 col-lg-3 fade-in"><div class="step-card"><div class="step-num">04</div><div class="step-title">Entrega y soporte</div><p class="step-desc">Entregamos el trabajo terminado y ofrecemos soporte post-entrega para que todo funcione perfecto.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONTACTO ─── -->
+  <section id="contacto">
+    <div class="container">
+      <div class="text-center mb-5 fade-in">
+        <p class="section-label">// 06 — Hablemos</p>
+        <h2 class="section-title">Contacto</h2>
+        <div class="section-divider mx-auto"></div>
+      </div>
+      <div class="row g-5">
+        <div class="col-lg-5 fade-in">
+          <p class="mb-4" style="color:var(--text);line-height:1.8;">Tenés un equipo roto, querés mejorar tu PC o necesitás una app para tu negocio. Escribinos y charlamos sin compromiso.</p>
+          <div class="contact-item d-block" id="contact-email" style="cursor: pointer;">
+            <i class="bi bi-envelope-fill"></i>
+            <div><div class="contact-item-label">Email</div><div class="contact-item-value">confianzamano@gmail.com</div></div>
+          </div>
+          <a href="https://wa.me/5491121917954" target="_blank" class="contact-item d-block">
+            <i class="bi bi-whatsapp"></i>
+            <div><div class="contact-item-label">WhatsApp</div><div class="contact-item-value">+54 9 11 2191-7954</div></div>
+          </a>
+          <a href="#" class="contact-item d-block">
+            <i class="bi bi-geo-alt-fill"></i>
+            <div><div class="contact-item-label">Zona de atención</div><div class="contact-item-value">Buenos Aires, Argentina</div></div>
+          </a>
+          <a href="https://linkedin.com/in/mariano-javier-cereto-3390985a" target="_blank" class="contact-item d-block">
+            <i class="bi bi-linkedin"></i>
+            <div><div class="contact-item-label">LinkedIn</div><div class="contact-item-value">linkedin.com/in/mariano-javier-cereto-3390985a</div></div>
+          </a>
+        </div>
+        <div class="col-lg-7 fade-in">
+          <div class="contact-form-wrap">
+            <form action="https://formspree.io/f/mlgarawp" method="POST" class="row g-3">
+              <div class="col-sm-6"><label class="form-label">Nombre</label><input type="text" name="nombre" class="form-control" placeholder="Tu nombre" required/></div>
+              <div class="col-sm-6"><label class="form-label">Email</label><input type="email" name="email" class="form-control" placeholder="tu@email.com" required/></div>
+              <div class="col-12">
+                <label class="form-label">Servicio</label>
+                <select class="form-control" name="servicio" required>
+                  <option value="">Seleccioná un servicio...</option>
+                  <option>Reparación de notebook / PC</option>
+                  <option>Instalación de sistema operativo</option>
+                  <option>Desarrollo de app web</option>
+                  <option>Desarrollo de app móvil</option>
+                  <option>Soporte técnico remoto</option>
+                  <option>Gestión Documental</option>
+                </select>
+              </div>
+              <div class="col-12"><label class="form-label">Mensaje</label><textarea class="form-control" name="mensaje" rows="4" placeholder="Contanos qué necesitás..." required></textarea></div>
+              <div class="col-12"><button type="submit" class="btn-solid w-100 text-center" style="cursor:pointer;">Enviar mensaje &rarr;</button></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <!-- Left Column: Logo & Tagline -->
+        <div class="footer-logo-section">
+          <img src="Logo.png" alt="ManoSys"/>
+          <div class="footer-logo-text">Soluciones Digitales</div>
+          <div class="footer-tagline">Soluciones digitales confiables</div>
+        </div>
+
+        <!-- Center Column: Navigation -->
+        <div class="footer-column">
+          <h3>Navegación</h3>
+          <div class="footer-links">
+            <a href="#servicios">Servicios</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#sobre-mi">Sobre nosotros</a>
+          </div>
+        </div>
+
+        <!-- Right Column: Contact & Social -->
+        <div class="footer-column">
+          <h3>Contacto</h3>
+          <div class="footer-contact">
+            <div class="footer-contact-item">
+              <i class="bi bi-envelope-fill"></i>
+              <a href="mailto:confianzamano@gmail.com">confianzamano@gmail.com</a>
+            </div>
+            <div class="footer-contact-item">
+              <i class="bi bi-whatsapp"></i>
+              <a href="https://wa.me/5491121917954" target="_blank">+54 9 11 2191 7954</a>
+            </div>
+            <div class="footer-socials">
+              <a href="https://linkedin.com/in/mariano-javier-cereto-3390985a" target="_blank" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Section -->
+      <div class="footer-bottom">
+        <div class="footer-bottom-links">
+          <a href="#">Política de privacidad</a> • <a href="#">Términos y condiciones</a> - © <span id="currentYear"></span> ManoSys • Buenos Aires, Argentina
+        </div>
+      </div>
+
+      <!-- Technology Stack -->
+      <div class="footer-stack">
+        <span class="footer-stack-item"><i class="bi bi-windows"></i>Windows</span>
+        <span class="footer-stack-item"><svg class="footer-stack-icon" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><circle cx="128" cy="128" r="24" fill="currentColor"/><ellipse cx="128" cy="128" rx="88" ry="40" fill="none" stroke="currentColor" stroke-width="18"/><ellipse cx="128" cy="128" rx="40" ry="88" fill="none" stroke="currentColor" stroke-width="18" transform="rotate(60 128 128)"/><ellipse cx="128" cy="128" rx="40" ry="88" fill="none" stroke="currentColor" stroke-width="18" transform="rotate(-60 128 128)"/></svg>React Native</span>
+        <span class="footer-stack-item"><i class="bi bi-phone-fill"></i>Android</span>
+        <span class="footer-stack-item"><i class="bi bi-database"></i>PostgreSQL</span>
+        <span class="footer-stack-item"><i class="bi bi-cloud"></i>AWS</span>
+        <span class="footer-stack-item"><i class="bi bi-server"></i>Node.js</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => { if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 80); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const filter = this.dataset.filter;
+        document.querySelectorAll('.portfolio-item').forEach(item => { item.style.display = filter === 'all' || item.dataset.cat === filter ? '' : 'none'; });
+      });
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        const collapse = document.getElementById('navMenu');
+        if (collapse.classList.contains('show')) bootstrap.Collapse.getOrCreateInstance(collapse).hide();
+      });
+    });
+
+    document.getElementById('contact-email').addEventListener('click', function() {
+      const emailAddress = 'confianzamano@gmail.com';
+      window.location.href = 'mailto:' + emailAddress;
+    });
+
+    const currentYearEl = document.getElementById('currentYear');
+    if (currentYearEl) {
+      currentYearEl.textContent = new Date().getFullYear();
+    }
+
+    const sections = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) current = s.id; });
+      document.querySelectorAll('.nav-link').forEach(link => { link.style.color = link.getAttribute('href') === '#' + current ? 'var(--neon)' : ''; });
+    });
+  </script>
+</body>
+</html>
